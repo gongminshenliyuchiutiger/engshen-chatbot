@@ -29,12 +29,12 @@
         #chat-container {
             flex: 1;
             max-width: 800px;
-            margin: 0 auto 20px; /* 與輸入框保持一致的間距 */
+            margin: 0 auto 20px;
             background-color: #fff;
             border-radius: 15px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             padding: 15px;
-            height: 450px; /* 稍微增加高度 */
+            height: 450px;
             overflow-y: auto;
             scrollbar-width: thin;
             scrollbar-color: #3498db #e9ecef;
@@ -187,6 +187,13 @@
         }
         .copy-btn:hover, .speak-btn:hover, .toggle-translation-btn:hover {
             color: #3498db;
+        }
+        /* 修改 user-message 中 copy-btn 的顏色 */
+        .user-message .copy-btn {
+            color: #ffffff; /* 白色，與藍色背景對比 */
+        }
+        .user-message .copy-btn:hover {
+            color: #d1e7ff; /* 懸停時為淺藍色，保持可見 */
         }
         #input-area {
             max-width: 800px;
@@ -497,9 +504,18 @@
         }
 
         function speakText(text) {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US';
-            window.speechSynthesis.speak(utterance);
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.onerror = (event) => {
+                    console.error('語音播放錯誤:', event.error);
+                    appendMessage('bot', 'Sorry, there was an error playing the audio.', '抱歉，播放音頻時發生錯誤。');
+                };
+                window.speechSynthesis.speak(utterance);
+            } else {
+                appendMessage('bot', 'Sorry, your browser does not support text-to-speech.', '抱歉，你的瀏覽器不支援語音播放功能。');
+            }
         }
 
         function appendMessage(sender, text, translation = '', isTyping = false) {
