@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EngShenChatBotSystem</title>
-    <!-- 引入 Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --bot-bg: #ecf0f1;
+            --shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            --border-radius: 15px;
+            --text-color: #2c3e50;
+            --muted-color: #7f8c8d;
+        }
         * {
             box-sizing: border-box;
         }
@@ -17,11 +25,11 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background-color: #f5f7fa;
+            background: linear-gradient(135deg, #eef2f7 0%, #d9e2ec 100%);
         }
         h1 {
             text-align: center;
-            color: #2c3e50;
+            color: var(--text-color);
             font-size: 2rem;
             margin-bottom: 20px;
             font-weight: 600;
@@ -31,13 +39,14 @@
             max-width: 800px;
             margin: 0 auto 20px;
             background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-radius: var(--border-radius);
+            border: 1px solid #e0e6ed;
+            box-shadow: var(--shadow);
             padding: 15px;
             height: 450px;
             overflow-y: auto;
             scrollbar-width: thin;
-            scrollbar-color: #3498db #e9ecef;
+            scrollbar-color: var(--primary-color) #e9ecef;
         }
         #chat-container::-webkit-scrollbar {
             width: 8px;
@@ -47,11 +56,11 @@
             border-radius: 10px;
         }
         #chat-container::-webkit-scrollbar-thumb {
-            background: #3498db;
+            background: var(--primary-color);
             border-radius: 10px;
         }
         #chat-container::-webkit-scrollbar-thumb:hover {
-            background: #2980b9;
+            background: var(--secondary-color);
         }
         .message {
             margin: 12px 0;
@@ -62,17 +71,21 @@
             display: flex;
             align-items: flex-start;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.2s ease;
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .user-message {
-            background-color: #3498db;
+            background-color: var(--primary-color);
             color: white;
             margin-left: auto;
             text-align: right;
         }
         .bot-message {
-            background-color: #ecf0f1;
-            color: #2c3e50;
+            background-color: var(--bot-bg);
+            color: var(--text-color);
             margin-right: auto;
             text-align: left;
             display: flex;
@@ -103,12 +116,17 @@
             position: absolute;
             top: 10px;
             border: 1px solid #34495e;
+            animation: blinkEyes 2s infinite;
         }
         .robot-eye-left {
             left: 10px;
         }
         .robot-eye-right {
             left: 20px;
+        }
+        @keyframes blinkEyes {
+            0%, 10%, 100% { height: 6px; }
+            5% { height: 2px; }
         }
         .robot-mouth {
             width: 12px;
@@ -144,8 +162,8 @@
             100% { transform: rotate(5deg); }
         }
         .typing {
-            background-color: #ecf0f1;
-            color: #7f8c8d;
+            background-color: var(--bot-bg);
+            color: var(--muted-color);
             font-style: italic;
             display: flex;
             align-items: center;
@@ -166,7 +184,7 @@
         }
         .translation {
             display: none;
-            color: #7f8c8d;
+            color: var(--muted-color);
             font-size: 0.9em;
             margin-top: 8px;
             text-align: left;
@@ -179,21 +197,20 @@
         .copy-btn, .speak-btn, .toggle-translation-btn {
             background: none;
             border: none;
-            color: #7f8c8d;
+            color: var(--muted-color);
             cursor: pointer;
             font-size: 14px;
             padding: 5px;
             transition: color 0.2s ease;
         }
+        .user-message .copy-btn, .user-message .speak-btn {
+            color: #ffffff;
+        }
         .copy-btn:hover, .speak-btn:hover, .toggle-translation-btn:hover {
-            color: #3498db;
+            color: var(--primary-color);
         }
-        /* 修改 user-message 中 copy-btn 的顏色 */
-        .user-message .copy-btn {
-            color: #ffffff; /* 白色，與藍色背景對比 */
-        }
-        .user-message .copy-btn:hover {
-            color: #d1e7ff; /* 懸停時為淺藍色，保持可見 */
+        .user-message .copy-btn:hover, .user-message .speak-btn:hover {
+            color: #d1e7ff;
         }
         #input-area {
             max-width: 800px;
@@ -202,53 +219,55 @@
             display: flex;
             align-items: center;
             background-color: #fff;
-            border-radius: 15px;
+            border-radius: var(--border-radius);
             padding: 10px 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow);
         }
         #user-input {
             flex: 1;
             padding: 12px;
-            border: none;
+            border: 1px solid #e0e6ed;
             border-radius: 10px;
             font-size: 16px;
             outline: none;
             background: transparent;
-            min-width: 0;
-            min-height: 60px;
+            min-height: 40px;
+            max-height: 120px;
             resize: vertical;
             line-height: 1.5;
-            color: #2c3e50;
+            color: var(--text-color);
+            transition: border-color 0.3s ease;
         }
-        #send-button, #mic-button {
-            background: none;
+        #user-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+        #send-button {
+            background: var(--primary-color);
             border: none;
-            color: #3498db;
+            color: white;
             cursor: pointer;
-            font-size: 22px;
+            font-size: 18px;
             padding: 10px;
-            transition: color 0.2s ease;
+            border-radius: 50%;
+            width: 40px;
+            height:  UML40px;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease, transform 0.2s ease;
         }
-        #send-button:hover, #mic-button:hover {
-            color: #2980b9;
-        }
-        #mic-button.recording {
-            color: #e74c3c;
-            animation: blink 1s infinite;
-        }
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 1; }
+        #send-button:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
         }
         footer {
             text-align: center;
             padding: 15px 0;
             font-size: 14px;
-            color: #7f8c8d;
+            color: var(--muted-color);
         }
-
-        /* Responsive Design */
         @media (max-width: 600px) {
             body {
                 padding: 10px;
@@ -266,71 +285,19 @@
                 max-width: 100%;
                 width: calc(100% - 20px);
                 padding: 8px 10px;
-                flex-direction: column;
             }
             .message {
                 max-width: 85%;
                 padding: 10px 14px;
             }
             #user-input {
-                width: 100%;
                 min-height: 50px;
-                padding: 10px;
                 font-size: 14px;
             }
-            #send-button, #mic-button {
-                font-size: 20px;
-                padding: 8px;
-            }
-            .bot-avatar {
+            #send-button {
                 width: 35px;
                 height: 35px;
-            }
-            .robot-head {
-                width: 28px;
-                height: 28px;
-                top: 3px;
-                left: 3px;
-            }
-        }
-        @media (max-width: 400px) {
-            .bot-avatar {
-                width: 30px;
-                height: 30px;
-            }
-            .robot-head {
-                width: 24px;
-                height: 24px;
-                top: 3px;
-                left: 3px;
-            }
-            .robot-eye-left, .robot-eye-right {
-                width: 5px;
-                height: 5px;
-                top: 8px;
-            }
-            .robot-eye-left {
-                left: 8px;
-            }
-            .robot-eye-right {
-                left: 16px;
-            }
-            .robot-mouth {
-                width: 10px;
-                height: 3px;
-                top: 16px;
-                left: 11px;
-            }
-            .robot-antenna {
-                height: 8px;
-                top: -4px;
-                left: 15px;
-            }
-            .robot-antenna-tip {
-                width: 5px;
-                height: 5px;
-                top: -7px;
-                left: 14px;
+                font-size: 16px;
             }
         }
     </style>
@@ -339,11 +306,9 @@
     <h1>EngShenChatBotSystem</h1>
     <div id="chat-container"></div>
     <div id="input-area">
-        <textarea id="user-input" placeholder="Type your message or use voice..."></textarea>
-        <button id="send-button" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
-        <button id="mic-button" onclick="toggleSpeechRecognition()"><i class="fa-solid fa-microphone"></i></button>
+        <textarea id="user-input" placeholder="輸入你的訊息..."></textarea>
+        <button id="send-button" title="發送訊息" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
     </div>
-    
     <footer>
         Copyright © Liyuchiutiger Gongminshen
     </footer>
@@ -351,92 +316,40 @@
     <script>
         const chatContainer = document.getElementById('chat-container');
         const userInput = document.getElementById('user-input');
-        const micButton = document.getElementById('mic-button');
-        const apiKey = 'AIzaSyCerlnUOTQ4-5K6VRpugpRI1URcOF6ai2w'; // Replace with your Google API Key
-        let recognition = null;
-        let isRecording = false;
+        const apiKey = 'AIzaSyCerlnUOTQ4-5K6VRpugpRI1URcOF6ai2w';
         let conversationHistory = [];
+        let isSpeaking = false;
 
-        // Initial message from the bot when the page loads
+        const commonMistakes = {
+            "teh": "the",
+            "recieve": "receive",
+            "wierd": "weird",
+            "definately": "definitely",
+            "thier": "their",
+            "alot": "a lot",
+            "your": "you're",
+            "loose": "lose",
+            "then": "than"
+        };
+
+        const grammarMistakes = {
+            "i is": "I am",
+            "he don't": "he doesn't",
+            "we was": "we were",
+            "they was": "they were"
+        };
+
         window.onload = () => {
             const initialMessage = {
                 user: null,
                 bot: {
-                    english: 'Hello! I’m your EngShenChatBot. Type or speak to me—what’s on your mind?',
-                    chinese: '嗨！我是你的EngShenChatBot。請輸入或語音告訴我你在想什麼！'
+                    english: 'Hello! I’m your EngShenChatBot here to help you improve your English. Type to me—what’s on your mind?',
+                    chinese: '嗨！我是你的EngShenChatBot，專門幫你提升英文。請輸入告訴我你在想什麼！'
                 }
             };
             conversationHistory.push(initialMessage);
             appendMessage('bot', initialMessage.bot.english, initialMessage.bot.chinese);
-            initializeSpeechRecognition();
         };
-
-        // Initialize speech recognition once and reuse it
-        function initializeSpeechRecognition() {
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                recognition = new SpeechRecognition();
-                recognition.lang = 'zh-TW';
-                recognition.interimResults = false;
-                recognition.maxAlternatives = 1;
-
-                recognition.onresult = (event) => {
-                    const transcript = event.results[0][0].transcript;
-                    userInput.value = transcript;
-                    stopSpeechRecognition();
-                    sendMessage();
-                };
-
-                recognition.onerror = (event) => {
-                    let errorMessage = 'No speech detected. Please try again.';
-                    let errorChinese = '未檢測到語音，請重試。';
-                    if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-                        errorMessage = 'Microphone access denied. Please enable it in your browser settings.';
-                        errorChinese = '麥克風存取被拒絕，請在瀏覽器設定中啟用。';
-                    } else if (event.error !== 'no-speech') {
-                        errorMessage = `Speech recognition error: ${event.error}. Please try again.`;
-                        errorChinese = `語音辨識錯誤：${event.error}，請重試。`;
-                    }
-                    appendMessage('bot', errorMessage, errorChinese);
-                    stopSpeechRecognition();
-                };
-
-                recognition.onend = () => {
-                    stopSpeechRecognition();
-                };
-            } else {
-                micButton.disabled = true;
-                micButton.title = 'Your browser does not support speech input';
-                appendMessage('bot', 'Sorry, your browser does not support speech input.', '抱歉，你的瀏覽器不支援語音輸入。');
-            }
-        }
-
-        function toggleSpeechRecognition() {
-            if (!recognition) {
-                appendMessage('bot', 'Speech recognition is not supported in your browser.', '語音辨識在你的瀏覽器中不被支援。');
-                return;
-            }
-
-            if (isRecording) {
-                recognition.stop();
-            } else {
-                try {
-                    recognition.start();
-                    micButton.classList.add('recording');
-                    micButton.innerHTML = '<i class="fa-solid fa-microphone"></i>';
-                    isRecording = true;
-                } catch (error) {
-                    appendMessage('bot', 'Error starting microphone. Please ensure it’s enabled in your browser.', '啟動麥克風時發生錯誤，請確保已在瀏覽器中啟用。');
-                    console.error(error);
-                }
-            }
-        }
-
-        function stopSpeechRecognition() {
-            micButton.classList.remove('recording');
-            micButton.innerHTML = '<i class="fa-solid fa-microphone"></i>';
-            isRecording = false;
-        }
 
         async function sendMessage() {
             const message = userInput.value.trim();
@@ -448,15 +361,39 @@
             const typingDiv = appendMessage('bot', '', '', true);
             typingDiv.classList.add('typing');
 
+            let spellingSuggestions = '';
+            const words = message.toLowerCase().split(' ');
+            words.forEach(word => {
+                if (commonMistakes[word]) {
+                    spellingSuggestions += `[EN] It seems you wrote "${word}" instead of "${commonMistakes[word]}". For example: "I have ${commonMistakes[word]} book." Keep practicing!\n[ZH] 你好像寫了 "${word}" 而不是 "${commonMistakes[word]}"。例如："我有一${commonMistakes[word] === 'a lot' ? '堆' : '本'}書。" 繼續練習吧！\n`;
+                }
+            });
+
+            let grammarSuggestions = '';
+            for (const mistake in grammarMistakes) {
+                if (message.toLowerCase().includes(mistake)) {
+                    grammarSuggestions += `[EN] Notice: "${mistake}" should be "${grammarMistakes[mistake]}". For example: "${grammarMistakes[mistake]} going to the park." Great effort, keep learning!\n[ZH] 注意："${mistake}" 應該是 "${grammarMistakes[mistake]}"。例如："${grammarMistakes[mistake]} 要去公園。" 努力得很棒，繼續學習！\n`;
+                }
+            }
+
+            if (spellingSuggestions || grammarSuggestions) {
+                chatContainer.removeChild(typingDiv);
+                const combinedSuggestions = (spellingSuggestions + grammarSuggestions).trim();
+                const enSuggestion = combinedSuggestions.split('[EN]')[1].split('[ZH]')[0].trim();
+                const zhSuggestion = combinedSuggestions.split('[ZH]')[1].trim();
+                appendMessage('bot', enSuggestion, zhSuggestion);
+                return;
+            }
+
             conversationHistory.push({ user: message, bot: null });
 
-            let historyPrompt = 'Here is the conversation history so far:\n\n';
+            let historyPrompt = '以下是目前的對話歷史：\n\n';
             conversationHistory.forEach(entry => {
                 if (entry.user) {
-                    historyPrompt += `User: ${entry.user}\n`;
+                    historyPrompt += `用戶：${entry.user}\n`;
                 }
                 if (entry.bot) {
-                    historyPrompt += `Bot: [EN] ${entry.bot.english}\n[ZH] ${entry.bot.chinese}\n`;
+                    historyPrompt += `機器人：[EN] ${entry.bot.english}\n[ZH] ${entry.bot.chinese}\n`;
                 }
             });
 
@@ -469,12 +406,12 @@
                     body: JSON.stringify({
                         "contents": [{
                             "parts": [{
-                                "text": `${historyPrompt}\n\nNow, respond to the latest user message: "${message}"\nPlease respond in a friendly and encouraging tone. Provide the response in English first, marked with [EN], followed by a Traditional Chinese translation marked with [ZH]. For example:\n\n[EN] Great job! Keep it up!\n[ZH] 做得很好！繼續加油！`
+                                "text": `${historyPrompt}\n\n現在，請回應用戶的最新訊息："${message}"\n請以友善且鼓勵的語氣回應。先提供英文回應，標記為 [EN]，然後提供繁體中文翻譯，標記為 [ZH]。確保回應和翻譯完整，並按句子自然分段，每句話換行顯示，以便後續分割。`
                             }]
                         }],
                         "generationConfig": {
                             "temperature": 0.7,
-                            "maxOutputTokens": 150
+                            "maxOutputTokens": 512
                         }
                     })
                 });
@@ -483,7 +420,7 @@
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(`API error: ${errorData.error.message}`);
+                    throw new Error(`API 錯誤：${errorData.error.message}`);
                 }
 
                 const data = await response.json();
@@ -491,30 +428,61 @@
 
                 const enMatch = botReply.match(/\[EN\](.*?)(?=\[ZH\]|$)/s);
                 const zhMatch = botReply.match(/\[ZH\](.*)/s);
-                const english = enMatch ? enMatch[1].trim() : 'No English response generated.';
-                const chinese = zhMatch ? zhMatch[1].trim() : '無法生成中文翻譯。';
+                let english = enMatch ? enMatch[1].trim() : '未生成英文回應。';
+                let chinese = zhMatch ? zhMatch[1].trim() : '無法生成中文翻譯。';
 
-                conversationHistory[conversationHistory.length - 1].bot = { english, chinese };
-                appendMessage('bot', english, chinese);
+                const enSentences = english.split(/\n/).filter(s => s.trim());
+                const zhSentences = chinese.split(/\n/).filter(s => s.trim());
+
+                for (let i = 0; i < Math.max(enSentences.length, zhSentences.length); i++) {
+                    const enSentence = enSentences[i] || '';
+                    const zhSentence = zhSentences[i] || '';
+                    const segment = { english: enSentence.trim(), chinese: zhSentence.trim() };
+
+                    if (i === 0) {
+                        conversationHistory[conversationHistory.length - 1].bot = segment;
+                    } else {
+                        conversationHistory.push({ user: null, bot: segment });
+                    }
+                    appendMessage('bot', segment.english, segment.chinese);
+                }
             } catch (error) {
                 chatContainer.removeChild(typingDiv);
-                appendMessage('bot', `Sorry, I couldn’t generate a response: ${error.message}`, `抱歉，我無法生成回應：${error.message}`);
+                appendMessage('bot', `抱歉，我無法生成回應：${error.message}`, `抱歉，我無法生成回應：${error.message}`);
                 console.error(error);
             }
         }
 
-        function speakText(text) {
+        function speakText(text, speakBtn) {
             if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'en-US';
-                utterance.onerror = (event) => {
-                    console.error('語音播放錯誤:', event.error);
-                    appendMessage('bot', 'Sorry, there was an error playing the audio.', '抱歉，播放音頻時發生錯誤。');
-                };
-                window.speechSynthesis.speak(utterance);
+                if (isSpeaking) {
+                    window.speechSynthesis.cancel();
+                    isSpeaking = false;
+                    speakBtn.innerHTML = '<i class="fa-solid fa-volume-up"></i>';
+                } else {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    utterance.onstart = () => {
+                        isSpeaking = true;
+                        speakBtn.innerHTML = '<i class="fa-solid fa-stop"></i>';
+                    };
+                    utterance.onend = () => {
+                        isSpeaking = false;
+                        speakBtn.innerHTML = '<i class="fa-solid fa-volume-up"></i>';
+                    };
+                    utterance.onerror = (event) => {
+                        if (event.error !== 'interrupted') {
+                            console.error('語音播放錯誤:', event.error);
+                            appendMessage('bot', '抱歉，播放音頻時發生錯誤。', '抱歉，播放音頻時發生錯誤。');
+                        }
+                        isSpeaking = false;
+                        speakBtn.innerHTML = '<i class="fa-solid fa-volume-up"></i>';
+                    };
+                    window.speechSynthesis.speak(utterance);
+                }
             } else {
-                appendMessage('bot', 'Sorry, your browser does not support text-to-speech.', '抱歉，你的瀏覽器不支援語音播放功能。');
+                appendMessage('bot', '抱歉，你的瀏覽器不支援語音播放功能。', '抱歉，你的瀏覽器不支援語音播放功能。');
             }
         }
 
@@ -576,30 +544,31 @@
                 };
                 buttonsDiv.appendChild(copyBtn);
 
-                if (sender === 'bot') {
-                    const speakBtn = document.createElement('button');
-                    speakBtn.classList.add('speak-btn');
-                    speakBtn.innerHTML = '<i class="fa-solid fa-volume-up"></i>';
-                    speakBtn.onclick = () => speakText(text);
-                    buttonsDiv.appendChild(speakBtn);
+                const speakBtn = document.createElement('button');
+                speakBtn.classList.add('speak-btn');
+                speakBtn.innerHTML = '<i class="fa-solid fa-volume-up"></i>';
+                speakBtn.onclick = () => speakText(text, speakBtn);
+                buttonsDiv.appendChild(speakBtn);
 
-                    if (translation) {
-                        const toggleBtn = document.createElement('button');
-                        toggleBtn.classList.add('toggle-translation-btn');
-                        toggleBtn.innerHTML = '<i class="fa-solid fa-language"></i>';
-                        toggleBtn.onclick = () => {
-                            const translationDiv = contentDiv.querySelector('.translation');
-                            translationDiv.style.display = translationDiv.style.display === 'block' ? 'none' : 'block';
-                        };
-                        buttonsDiv.appendChild(toggleBtn);
-                    }
+                if (sender === 'bot' && translation) {
+                    const toggleBtn = document.createElement('button');
+                    toggleBtn.classList.add('toggle-translation-btn');
+                    toggleBtn.innerHTML = '<i class="fa-solid fa-language"></i>';
+                    toggleBtn.onclick = () => {
+                        const translationDiv = contentDiv.querySelector('.translation');
+                        translationDiv.style.display = translationDiv.style.display === 'block' ? 'none' : 'block';
+                    };
+                    buttonsDiv.appendChild(toggleBtn);
                 }
 
                 messageDiv.appendChild(buttonsDiv);
             }
 
+            const isNearBottom = chatContainer.scrollHeight - chatContainer.scrollTop - chatContainer.clientHeight < 100;
             chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            if (isNearBottom) {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
             return messageDiv;
         }
 
