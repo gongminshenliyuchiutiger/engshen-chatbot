@@ -34,13 +34,20 @@
             margin-bottom: 20px;
             font-weight: 600;
         }
-        #chat-container {
+        .main-content-wrapper {
             flex: 1;
             max-width: 800px;
-            margin: 0 auto 20px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+        #chat-container {
+            flex: 1;
             background-color: #fff;
-            border-radius: var(--border-radius);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
             border: 1px solid #e0e6ed;
+            border-bottom: none;
             box-shadow: var(--shadow);
             padding: 15px;
             height: 450px;
@@ -212,16 +219,85 @@
         .user-message .copy-btn:hover, .user-message .speak-btn:hover {
             color: #d1e7ff;
         }
-        #input-area {
-            max-width: 800px;
-            width: calc(100% - 40px);
-            margin: 0 auto;
+        /* ---- API Key and Input Area Styles ---- */
+        .controls-wrapper {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid #e0e6ed;
+            border-top: none;
+        }
+        .api-key-section { margin-bottom: 15px; }
+        .info-box {
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            background-color: rgba(52, 152, 219, 0.1);
+            border-color: var(--primary-color);
+            color: var(--text-color);
+        }
+        .info-box.warning {
+            background-color: rgba(241, 196, 15, 0.15);
+            border-color: #f1c40f;
+        }
+        .api-key-label-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .api-key-label-wrapper label {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        .api-options {
             display: flex;
             align-items: center;
-            background-color: #fff;
-            border-radius: var(--border-radius);
-            padding: 10px 15px;
-            box-shadow: var(--shadow);
+            gap: 12px;
+        }
+        .api-tutorial-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .api-tutorial-link:hover {
+            text-decoration: underline;
+        }
+        .api-options a {
+            color: var(--muted-color);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        .api-options a:hover { color: var(--primary-color); }
+        #user-api-key {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e0e6ed;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            color: var(--text-color);
+            transition: border-color 0.3s ease;
+        }
+        #user-api-key:focus {
+             border-color: var(--primary-color);
+             box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+        #user-api-key:disabled {
+            background-color: #f0f4f8;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        #input-area {
+            display: flex;
+            align-items: center;
         }
         #user-input {
             flex: 1;
@@ -242,7 +318,7 @@
             border-color: var(--primary-color);
             box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
         }
-        #send-button {
+        #send-button, #reset-button {
             background: var(--primary-color);
             border: none;
             color: white;
@@ -251,17 +327,51 @@
             padding: 10px;
             border-radius: 50%;
             width: 40px;
-            height:  UML40px;
+            height: 40px;
             margin-left: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: background 0.3s ease, transform 0.2s ease;
         }
-        #send-button:hover {
+        #send-button:hover, #reset-button:hover {
             background: var(--secondary-color);
             transform: scale(1.1);
         }
+        #reset-button {
+            background: #e74c3c;
+        }
+        #reset-button:hover {
+            background: #c0392b;
+        }
+        
+        /* --- Modal Styles --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none; justify-content: center; align-items: center;
+            z-index: 1000; animation: fadeInModal 0.3s;
+        }
+        @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
+        .modal-content {
+            background: #fff; padding: 30px; border-radius: 12px;
+            max-width: 600px; width: 90%; position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto;
+        }
+        .modal-close {
+            position: absolute; top: 10px; right: 15px;
+            font-size: 1.8rem; color: var(--muted-color);
+            cursor: pointer; transition: transform 0.2s;
+        }
+        .modal-close:hover { transform: scale(1.2); color: var(--text-color); }
+        .modal-content h3 { color: var(--primary-color); margin-bottom: 15px; }
+        .modal-content p, .modal-content li { margin-bottom: 10px; line-height: 1.6; }
+        .modal-content ol { padding-left: 20px; }
+        .modal-content code { background-color: #eef2f7; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+        .modal-content a { color: var(--secondary-color); text-decoration: none; font-weight: 500; }
+        .modal-content a:hover { text-decoration: underline; }
+
         footer {
             text-align: center;
             padding: 15px 0;
@@ -276,70 +386,106 @@
                 font-size: 1.5rem;
             }
             #chat-container {
-                max-width: 100%;
-                height: 350px;
-                padding: 10px;
-                margin-bottom: 15px;
-            }
-            #input-area {
-                max-width: 100%;
-                width: calc(100% - 20px);
-                padding: 8px 10px;
+                height: calc(100vh - 280px);
             }
             .message {
                 max-width: 85%;
-                padding: 10px 14px;
-            }
-            #user-input {
-                min-height: 50px;
-                font-size: 14px;
-            }
-            #send-button {
-                width: 35px;
-                height: 35px;
-                font-size: 16px;
             }
         }
     </style>
 </head>
 <body>
     <h1>EngShenChatBotSystem</h1>
-    <div id="chat-container"></div>
-    <div id="input-area">
-        <textarea id="user-input" placeholder="輸入你的訊息..."></textarea>
-        <button id="send-button" title="發送訊息" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+    <div class="main-content-wrapper">
+        <div id="chat-container"></div>
+        <div class="controls-wrapper">
+            <div class="api-key-section">
+                <div id="aiApiInfoBox" class="info-box">
+                    <p id="aiApiInfoText">請提供您的 Google Gemini API 金鑰以開始對話。</p>
+                </div>
+                <div class="api-key-label-wrapper">
+                    <label for="user-api-key">您的 API 金鑰 (必填)</label>
+                    <div class="api-options">
+                        <a href="#" class="api-tutorial-link">(如何取得？)</a>
+                        <a href="#" id="enableBackupKey" title="無法取得金鑰？點此啟用備用金鑰">
+                            <i class="fas fa-cog"></i>
+                        </a>
+                    </div>
+                </div>
+                <input type="text" id="user-api-key" placeholder="請貼上您從 Google AI Studio 取得的 API 金鑰">
+            </div>
+            <div id="input-area">
+                <textarea id="user-input" placeholder="輸入你的訊息..."></textarea>
+                <button id="reset-button" title="重設對話"><i class="fa-solid fa-sync-alt"></i></button>
+                <button id="send-button" title="發送訊息"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
     </div>
     <footer>
         Copyright © Liyuchiutiger Gongminshen
     </footer>
 
+    <!-- API Key Tutorial Modal -->
+    <div class="modal-overlay" id="apiKeyModal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3>如何取得免費的 Google Gemini API 金鑰？</h3>
+            <p>按照以下簡單步驟，即可取得您自己的免費金鑰，享受更穩定、個人化的服務。</p>
+            <ol>
+                <li>前往 <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio 的 API 金鑰頁面</a>。</li>
+                <li>使用您的 Google 帳號登入。</li>
+                <li>點擊頁面上的 <strong>「建立 API 金鑰」(Create API key)</strong> 按鈕。</li>
+                <li>系統會立即產生一組新的金鑰。點擊金鑰旁邊的複製圖示。</li>
+                <li>回到本頁面，將複製的金鑰貼到輸入框中即可！</li>
+            </ol>
+            <p><strong>提醒：</strong>請妥善保管您的 API 金鑰，不要與他人分享。</p>
+        </div>
+    </div>
+
     <script>
-        const chatContainer = document.getElementById('chat-container');
-        const userInput = document.getElementById('user-input');
-        const apiKey = 'AIzaSyCerlnUOTQ4-5K6VRpugpRI1URcOF6ai2w';
+        const ui = {
+            chatContainer: document.getElementById('chat-container'),
+            userInput: document.getElementById('user-input'),
+            sendButton: document.getElementById('send-button'),
+            resetButton: document.getElementById('reset-button'),
+            userApiKeyInput: document.getElementById('user-api-key'),
+            aiApiInfoBox: document.getElementById('aiApiInfoBox'),
+            aiApiInfoText: document.getElementById('aiApiInfoText'),
+            enableBackupKey: document.getElementById('enableBackupKey'),
+            apiKeyModal: document.getElementById('apiKeyModal'),
+            openApiKeyModalLink: document.querySelector('.api-tutorial-link')
+        };
+        
+        const BACKUP_API_KEY = 'AIzaSyCerlnUOTQ4-5K6VRpugpRI1URcOF6ai2w';
         let conversationHistory = [];
         let isSpeaking = false;
+        let isBackupKeyEnabled = false;
 
         const commonMistakes = {
-            "teh": "the",
-            "recieve": "receive",
-            "wierd": "weird",
-            "definately": "definitely",
-            "thier": "their",
-            "alot": "a lot",
-            "your": "you're",
-            "loose": "lose",
-            "then": "than"
+            "teh": "the", "recieve": "receive", "wierd": "weird",
+            "definately": "definitely", "thier": "their", "alot": "a lot",
+            "your": "you're", "loose": "lose", "then": "than"
         };
-
         const grammarMistakes = {
-            "i is": "I am",
-            "he don't": "he doesn't",
-            "we was": "we were",
-            "they was": "they were"
+            "i is": "I am", "he don't": "he doesn't",
+            "we was": "we were", "they was": "they were"
         };
 
-        window.onload = () => {
+        const init = () => {
+            conversationHistory = [];
+            isBackupKeyEnabled = false;
+            ui.chatContainer.innerHTML = '';
+            ui.userInput.value = '';
+
+            // Reset API key section
+            ui.userApiKeyInput.value = '';
+            ui.userApiKeyInput.disabled = false;
+            ui.userApiKeyInput.placeholder = "請貼上您從 Google AI Studio 取得的 API 金鑰";
+            ui.aiApiInfoBox.classList.remove('warning');
+            ui.aiApiInfoText.textContent = '請提供您的 Google Gemini API 金鑰以開始對話。';
+            ui.enableBackupKey.style.display = 'inline-block';
+
+            // Add initial bot message
             const initialMessage = {
                 user: null,
                 bot: {
@@ -351,12 +497,45 @@
             appendMessage('bot', initialMessage.bot.english, initialMessage.bot.chinese);
         };
 
+        window.onload = init;
+        
+        // --- Event Listeners ---
+        ui.resetButton.addEventListener('click', () => {
+            if (confirm('確定要重設所有對話紀錄和API金鑰設定嗎？')) {
+                init();
+            }
+        });
+
+        ui.openApiKeyModalLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            ui.apiKeyModal.style.display = 'flex';
+        });
+        
+        ui.apiKeyModal.addEventListener('click', (e) => {
+            if (e.target === ui.apiKeyModal || e.target.classList.contains('modal-close')) {
+                ui.apiKeyModal.style.display = 'none';
+            }
+        });
+
+        const getActiveApiKey = () => {
+            if (isBackupKeyEnabled) return BACKUP_API_KEY;
+            return ui.userApiKeyInput.value.trim();
+        };
+
         async function sendMessage() {
-            const message = userInput.value.trim();
+            const message = ui.userInput.value.trim();
             if (!message) return;
 
+            const apiKeyToUse = getActiveApiKey();
+            if (!apiKeyToUse) {
+                alert('請在輸入框中提供您的 Google Gemini API 金鑰，或點擊齒輪圖示啟用備用金鑰，才能開始對話。');
+                ui.userApiKeyInput.focus();
+                return;
+            }
+
             appendMessage('user', message);
-            userInput.value = '';
+            ui.userInput.value = '';
+            ui.sendButton.disabled = true;
 
             const typingDiv = appendMessage('bot', '', '', true);
             typingDiv.classList.add('typing');
@@ -377,11 +556,12 @@
             }
 
             if (spellingSuggestions || grammarSuggestions) {
-                chatContainer.removeChild(typingDiv);
+                ui.chatContainer.removeChild(typingDiv);
                 const combinedSuggestions = (spellingSuggestions + grammarSuggestions).trim();
                 const enSuggestion = combinedSuggestions.split('[EN]')[1].split('[ZH]')[0].trim();
                 const zhSuggestion = combinedSuggestions.split('[ZH]')[1].trim();
                 appendMessage('bot', enSuggestion, zhSuggestion);
+                ui.sendButton.disabled = false;
                 return;
             }
 
@@ -389,34 +569,21 @@
 
             let historyPrompt = '以下是目前的對話歷史：\n\n';
             conversationHistory.forEach(entry => {
-                if (entry.user) {
-                    historyPrompt += `用戶：${entry.user}\n`;
-                }
-                if (entry.bot) {
-                    historyPrompt += `機器人：[EN] ${entry.bot.english}\n[ZH] ${entry.bot.chinese}\n`;
-                }
+                if (entry.user) historyPrompt += `用戶：${entry.user}\n`;
+                if (entry.bot) historyPrompt += `機器人：[EN] ${entry.bot.english}\n[ZH] ${entry.bot.chinese}\n`;
             });
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKeyToUse}`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        "contents": [{
-                            "parts": [{
-                                "text": `${historyPrompt}\n\n現在，請回應用戶的最新訊息："${message}"\n請以友善且鼓勵的語氣回應。先提供英文回應，標記為 [EN]，然後提供繁體中文翻譯，標記為 [ZH]。確保回應和翻譯完整，並按句子自然分段，每句話換行顯示，以便後續分割。`
-                            }]
-                        }],
-                        "generationConfig": {
-                            "temperature": 0.7,
-                            "maxOutputTokens": 512
-                        }
+                        "contents": [{"parts": [{"text": `${historyPrompt}\n\n現在，請回應用戶的最新訊息："${message}"\n請以友善且鼓勵的語氣回應。先提供英文回應，標記為 [EN]，然後提供繁體中文翻譯，標記為 [ZH]。確保回應和翻譯完整，並按句子自然分段，每句話換行顯示，以便後續分割。`}]}],
+                        "generationConfig": { "temperature": 0.7, "maxOutputTokens": 512 }
                     })
                 });
 
-                chatContainer.removeChild(typingDiv);
+                ui.chatContainer.removeChild(typingDiv);
 
                 if (!response.ok) {
                     const errorData = await response.json();
@@ -438,18 +605,16 @@
                     const enSentence = enSentences[i] || '';
                     const zhSentence = zhSentences[i] || '';
                     const segment = { english: enSentence.trim(), chinese: zhSentence.trim() };
-
-                    if (i === 0) {
-                        conversationHistory[conversationHistory.length - 1].bot = segment;
-                    } else {
-                        conversationHistory.push({ user: null, bot: segment });
-                    }
+                    if (i === 0) conversationHistory[conversationHistory.length - 1].bot = segment;
+                    else conversationHistory.push({ user: null, bot: segment });
                     appendMessage('bot', segment.english, segment.chinese);
                 }
             } catch (error) {
-                chatContainer.removeChild(typingDiv);
+                ui.chatContainer.removeChild(typingDiv);
                 appendMessage('bot', `抱歉，我無法生成回應：${error.message}`, `抱歉，我無法生成回應：${error.message}`);
                 console.error(error);
+            } finally {
+                ui.sendButton.disabled = false;
             }
         }
 
@@ -488,31 +653,11 @@
 
         function appendMessage(sender, text, translation = '', isTyping = false) {
             const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message');
-            messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
+            messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
 
             if (sender === 'bot' && !isTyping) {
-                const avatar = document.createElement('div');
-                avatar.classList.add('bot-avatar');
-                const head = document.createElement('div');
-                head.classList.add('robot-head');
-                const eyeLeft = document.createElement('div');
-                eyeLeft.classList.add('robot-eye-left');
-                const eyeRight = document.createElement('div');
-                eyeRight.classList.add('robot-eye-right');
-                const mouth = document.createElement('div');
-                mouth.classList.add('robot-mouth');
-                const antenna = document.createElement('div');
-                antenna.classList.add('robot-antenna');
-                const antennaTip = document.createElement('div');
-                antennaTip.classList.add('robot-antenna-tip');
-                head.appendChild(eyeLeft);
-                head.appendChild(eyeRight);
-                head.appendChild(mouth);
-                head.appendChild(antenna);
-                head.appendChild(antennaTip);
-                avatar.appendChild(head);
-                messageDiv.appendChild(avatar);
+                const avatar = `<div class="bot-avatar"><div class="robot-head"><div class="robot-eye-left"></div><div class="robot-eye-right"></div><div class="robot-mouth"></div><div class="robot-antenna"></div><div class="robot-antenna-tip"></div></div></div>`;
+                messageDiv.innerHTML = avatar;
             }
 
             const contentDiv = document.createElement('div');
@@ -527,57 +672,62 @@
                 translationDiv.innerHTML = translation;
                 contentDiv.appendChild(translationDiv);
             }
-
             messageDiv.appendChild(contentDiv);
 
             if (text && !isTyping) {
                 const buttonsDiv = document.createElement('div');
                 buttonsDiv.classList.add('message-buttons');
 
-                const copyBtn = document.createElement('button');
-                copyBtn.classList.add('copy-btn');
-                copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>';
-                copyBtn.onclick = () => {
-                    navigator.clipboard.writeText(text);
-                    copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
-                    setTimeout(() => copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>', 2000);
-                };
-                buttonsDiv.appendChild(copyBtn);
-
-                const speakBtn = document.createElement('button');
-                speakBtn.classList.add('speak-btn');
-                speakBtn.innerHTML = '<i class="fa-solid fa-volume-up"></i>';
-                speakBtn.onclick = () => speakText(text, speakBtn);
-                buttonsDiv.appendChild(speakBtn);
-
+                buttonsDiv.innerHTML = `<button class="copy-btn"><i class="fa-regular fa-copy"></i></button><button class="speak-btn"><i class="fa-solid fa-volume-up"></i></button>`;
                 if (sender === 'bot' && translation) {
-                    const toggleBtn = document.createElement('button');
-                    toggleBtn.classList.add('toggle-translation-btn');
-                    toggleBtn.innerHTML = '<i class="fa-solid fa-language"></i>';
-                    toggleBtn.onclick = () => {
-                        const translationDiv = contentDiv.querySelector('.translation');
-                        translationDiv.style.display = translationDiv.style.display === 'block' ? 'none' : 'block';
-                    };
-                    buttonsDiv.appendChild(toggleBtn);
+                    buttonsDiv.innerHTML += `<button class="toggle-translation-btn"><i class="fa-solid fa-language"></i></button>`;
                 }
-
+                
+                buttonsDiv.querySelector('.copy-btn').onclick = () => {
+                    navigator.clipboard.writeText(text);
+                    const btn = buttonsDiv.querySelector('.copy-btn');
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                    setTimeout(() => btn.innerHTML = '<i class="fa-regular fa-copy"></i>', 2000);
+                };
+                buttonsDiv.querySelector('.speak-btn').onclick = () => speakText(text, buttonsDiv.querySelector('.speak-btn'));
+                if (sender === 'bot' && translation) {
+                    buttonsDiv.querySelector('.toggle-translation-btn').onclick = () => {
+                        const transDiv = contentDiv.querySelector('.translation');
+                        transDiv.style.display = transDiv.style.display === 'block' ? 'none' : 'block';
+                    };
+                }
                 messageDiv.appendChild(buttonsDiv);
             }
 
-            const isNearBottom = chatContainer.scrollHeight - chatContainer.scrollTop - chatContainer.clientHeight < 100;
-            chatContainer.appendChild(messageDiv);
+            const isNearBottom = ui.chatContainer.scrollHeight - ui.chatContainer.scrollTop - ui.chatContainer.clientHeight < 100;
+            ui.chatContainer.appendChild(messageDiv);
             if (isNearBottom) {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+                ui.chatContainer.scrollTop = ui.chatContainer.scrollHeight;
             }
             return messageDiv;
         }
 
-        userInput.addEventListener('keypress', (e) => {
+        ui.userInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
             }
         });
+        ui.sendButton.addEventListener('click', sendMessage);
+
+        ui.enableBackupKey.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm("這將啟用系統內建的備用金鑰進行對話。\n\n此金鑰為多人共用，尖峰時段可能不穩定或無法使用。\n強烈建議您使用自己的免費金鑰以獲得最佳體驗。\n\n確定要啟用備用金鑰嗎？")) {
+                isBackupKeyEnabled = true;
+                ui.userApiKeyInput.value = '已啟用系統備用金鑰';
+                ui.userApiKeyInput.disabled = true;
+                ui.aiApiInfoBox.classList.add('warning');
+                ui.aiApiInfoText.textContent = '已啟用系統備用金鑰。此金鑰為多人共用，可能不穩定。若要使用自己的金鑰，請點擊右側重設按鈕。';
+                ui.enableBackupKey.style.display = 'none';
+                alert('系統備用金鑰已啟用。');
+            }
+        });
+
     </script>
 </body>
 </html>
