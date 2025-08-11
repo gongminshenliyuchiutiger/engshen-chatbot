@@ -1,39 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EngShenChatBotSystem</title>
+    <title>EngShenChatBotSystem - Green Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2980b9;
-            --bot-bg: #ecf0f1;
-            --shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            --border-radius: 15px;
+            --font-family: 'Poppins', 'Noto Sans TC', sans-serif;
+            --primary-color: #27ae60;      /* Main Green */
+            --secondary-color: #2ecc71;    /* Lighter Green */
+            --accent-color: #f1c40f;       /* Yellow for accent */
+            --background-gradient: linear-gradient(135deg, #f0f9f4, #e6f4ea);
+            --container-bg: #FFFFFF;
             --text-color: #2c3e50;
-            --muted-color: #7f8c8d;
+            --text-light: #5f6c7b;
+            --border-color: #dce7e2;
+            --input-bg: #f8fcf9;
+            --bot-bubble-bg: #e8f5e9;
+            --user-bubble-bg: var(--primary-color);
+            --border-radius: 12px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
-        * {
-            box-sizing: border-box;
-        }
+
+        * { box-sizing: border-box; }
+
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: var(--font-family);
             margin: 0;
             padding: 20px;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background: linear-gradient(135deg, #eef2f7 0%, #d9e2ec 100%);
+            background: var(--background-gradient);
+            color: var(--text-color);
         }
+
         h1 {
             text-align: center;
-            color: var(--text-color);
-            font-size: 2rem;
+            color: var(--primary-color);
+            font-size: 2.2rem;
             margin-bottom: 20px;
-            font-weight: 600;
+            font-weight: 700;
         }
+        h1 i {
+            color: var(--secondary-color);
+            margin-right: 12px;
+        }
+
         .main-content-wrapper {
             flex: 1;
             max-width: 800px;
@@ -42,62 +59,66 @@
             display: flex;
             flex-direction: column;
         }
+
         #chat-container {
             flex: 1;
             background-color: #fff;
             border-radius: var(--border-radius) var(--border-radius) 0 0;
-            border: 1px solid #e0e6ed;
+            border: 1px solid var(--border-color);
             border-bottom: none;
-            box-shadow: var(--shadow);
-            padding: 15px;
-            height: 450px;
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            height: 500px;
             overflow-y: auto;
             scrollbar-width: thin;
-            scrollbar-color: var(--primary-color) #e9ecef;
+            scrollbar-color: var(--secondary-color) #f1f1f1;
         }
-        #chat-container::-webkit-scrollbar {
-            width: 8px;
-        }
-        #chat-container::-webkit-scrollbar-track {
-            background: #e9ecef;
-            border-radius: 10px;
-        }
-        #chat-container::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 10px;
-        }
-        #chat-container::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary-color);
-        }
+        #chat-container::-webkit-scrollbar { width: 8px; }
+        #chat-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        #chat-container::-webkit-scrollbar-thumb { background-color: var(--secondary-color); border-radius: 4px; }
+        #chat-container::-webkit-scrollbar-thumb:hover { background-color: var(--primary-color); }
+
         .message {
-            margin: 12px 0;
-            padding: 12px 18px;
-            border-radius: 20px;
-            max-width: 75%;
-            word-wrap: break-word;
             display: flex;
             align-items: flex-start;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-            animation: fadeIn 0.3s ease-in;
+            margin-bottom: 20px;
+            max-width: 90%;
+            animation: fadeIn 0.4s ease-out;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         .user-message {
+            margin-left: auto;
+            flex-direction: row-reverse;
+        }
+
+        .bot-message {
+            margin-right: auto;
+        }
+
+        .message-bubble {
+            padding: 12px 18px;
+            border-radius: 18px;
+            line-height: 1.6;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        
+        .user-message .message-bubble {
             background-color: var(--primary-color);
             color: white;
-            margin-left: auto;
-            text-align: right;
+            border-radius: 18px 4px 18px 18px;
+            display: flex; /* MODIFIED FOR BUTTONS INSIDE */
+            align-items: center; /* MODIFIED FOR BUTTONS INSIDE */
+            gap: 10px; /* MODIFIED FOR BUTTONS INSIDE */
         }
-        .bot-message {
-            background-color: var(--bot-bg);
+        
+        .bot-message .message-bubble {
+            background-color: var(--bot-bubble-bg);
             color: var(--text-color);
-            margin-right: auto;
-            text-align: left;
-            display: flex;
-            align-items: flex-start;
+            border-radius: 4px 18px 18px 18px;
         }
+
+        /* --- Original Bot Avatar Styles --- */
         .bot-avatar {
             width: 40px;
             height: 40px;
@@ -125,20 +146,13 @@
             border: 1px solid #34495e;
             animation: blinkEyes 2s infinite;
         }
-        .robot-eye-left {
-            left: 10px;
-        }
-        .robot-eye-right {
-            left: 20px;
-        }
-        @keyframes blinkEyes {
-            0%, 10%, 100% { height: 6px; }
-            5% { height: 2px; }
-        }
+        .robot-eye-left { left: 10px; }
+        .robot-eye-right { left: 20px; }
+        @keyframes blinkEyes { 0%, 10%, 100% { height: 6px; } 5% { height: 2px; } }
         .robot-mouth {
             width: 12px;
             height: 4px;
-            background-color: #f1c40f;
+            background-color: var(--accent-color);
             border-radius: 2px;
             position: absolute;
             top: 20px;
@@ -148,7 +162,7 @@
         .robot-antenna {
             width: 2px;
             height: 10px;
-            background-color: #2ecc71;
+            background-color: var(--secondary-color);
             position: absolute;
             top: -5px;
             left: 19px;
@@ -164,207 +178,67 @@
             top: -8px;
             left: 17px;
         }
-        @keyframes antennaWiggle {
-            0% { transform: rotate(-5deg); }
-            100% { transform: rotate(5deg); }
-        }
-        .typing {
-            background-color: var(--bot-bg);
-            color: var(--muted-color);
-            font-style: italic;
+        @keyframes antennaWiggle { 0% { transform: rotate(-5deg); } 100% { transform: rotate(5deg); } }
+
+        .typing-indicator span { height: 8px; width: 8px; margin: 0 2px; background-color: var(--text-light); border-radius: 50%; display: inline-block; animation: typing 1s infinite ease-in-out; }
+        .typing-indicator span:nth-child(1) { animation-delay: 0s; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.1s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.2s; }
+        @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+
+        .message-content { flex: 1; }
+        .translation { display: none; color: var(--text-light); font-size: 0.9em; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #ccc; }
+        
+        /* --- MODIFIED/NEW ACTION BUTTONS STYLES --- */
+        .bot-message-actions {
             display: flex;
             align-items: center;
+            gap: 4px;
+            margin-left: 10px;
         }
-        .typing::before {
-            content: "Typing";
-            animation: typing 1.5s infinite;
-        }
-        @keyframes typing {
-            0% { content: "Typing"; }
-            33% { content: "Typing."; }
-            66% { content: "Typing.."; }
-            100% { content: "Typing..."; }
-        }
-        .message-content {
-            flex: 1;
-            position: relative;
-        }
-        .translation {
-            display: none;
-            color: var(--muted-color);
-            font-size: 0.9em;
-            margin-top: 8px;
-            text-align: left;
-        }
-        .message-buttons {
+        .user-message-actions {
             display: flex;
             align-items: center;
-            margin-left: 12px;
+            gap: 4px;
+            flex-shrink: 0;
         }
-        .copy-btn, .speak-btn, .toggle-translation-btn {
-            background: none;
-            border: none;
-            color: var(--muted-color);
-            cursor: pointer;
-            font-size: 14px;
-            padding: 5px;
-            transition: color 0.2s ease;
-        }
-        .user-message .copy-btn, .user-message .speak-btn {
-            color: #ffffff;
-        }
-        .copy-btn:hover, .speak-btn:hover, .toggle-translation-btn:hover {
-            color: var(--primary-color);
-        }
-        .user-message .copy-btn:hover, .user-message .speak-btn:hover {
-            color: #d1e7ff;
-        }
-        /* ---- API Key and Input Area Styles ---- */
+        .action-btn { background: none; border: none; color: var(--text-light); cursor: pointer; font-size: 1rem; padding: 6px; border-radius: 50%; transition: all 0.2s; width: 32px; height: 32px; display:inline-flex; align-items:center; justify-content:center;}
+        .bot-message + .bot-message-actions .action-btn:hover { background-color: rgba(0,0,0,0.08); color: var(--primary-color); }
+        .user-message .action-btn { color: rgba(255,255,255,0.7); }
+        .user-message .action-btn:hover { background-color: rgba(255,255,255,0.2); color: #fff; }
+
         .controls-wrapper {
             background-color: #fff;
-            padding: 15px;
+            padding: 20px;
             border-radius: 0 0 var(--border-radius) var(--border-radius);
-            box-shadow: var(--shadow);
-            border: 1px solid #e0e6ed;
+            box-shadow: var(--box-shadow);
+            border: 1px solid var(--border-color);
             border-top: none;
         }
-        .api-key-section { margin-bottom: 15px; }
-        .info-box {
-            padding: 10px;
-            border-radius: 8px;
-            border-left: 4px solid;
-            font-size: 0.85rem;
-            margin-bottom: 10px;
-            background-color: rgba(52, 152, 219, 0.1);
-            border-color: var(--primary-color);
-            color: var(--text-color);
-        }
-        .info-box.warning {
-            background-color: rgba(241, 196, 15, 0.15);
-            border-color: #f1c40f;
-        }
-        .api-key-label-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-        .api-key-label-wrapper label {
-            font-weight: 500;
-            color: var(--text-color);
-        }
-        .api-options {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .api-tutorial-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-        }
-        .api-tutorial-link:hover {
-            text-decoration: underline;
-        }
-        .api-options a {
-            color: var(--muted-color);
-            text-decoration: none;
-            font-size: 1rem;
-            transition: color 0.2s;
-        }
-        .api-options a:hover { color: var(--primary-color); }
-        #user-api-key {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #e0e6ed;
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-            color: var(--text-color);
-            transition: border-color 0.3s ease;
-        }
-        #user-api-key:focus {
-             border-color: var(--primary-color);
-             box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
-        }
-        #user-api-key:disabled {
-            background-color: #f0f4f8;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
 
-        #input-area {
-            display: flex;
-            align-items: center;
-        }
-        #user-input {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #e0e6ed;
-            border-radius: 10px;
-            font-size: 16px;
-            outline: none;
-            background: transparent;
-            min-height: 40px;
-            max-height: 120px;
-            resize: vertical;
-            line-height: 1.5;
-            color: var(--text-color);
-            transition: border-color 0.3s ease;
-        }
-        #user-input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
-        }
-        #send-button, #reset-button {
-            background: var(--primary-color);
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 18px;
-            padding: 10px;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            margin-left: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-        #send-button:hover, #reset-button:hover {
-            background: var(--secondary-color);
-            transform: scale(1.1);
-        }
-        #reset-button {
-            background: #e74c3c;
-        }
-        #reset-button:hover {
-            background: #c0392b;
-        }
+        .api-key-section { margin-bottom: 15px; }
+        .info-box { padding: 10px; border-radius: 8px; border-left: 4px solid var(--primary-color); font-size: 0.9em; margin-bottom: 10px; background-color: rgba(39, 174, 96, 0.1); }
+        .api-key-label-wrapper { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .api-key-label-wrapper label { font-weight: 600; color: var(--primary-color); }
+        .api-tutorial-link { color: var(--secondary-color); text-decoration: none; font-size: 0.9em; cursor: pointer; font-weight: 500;}
+        .api-tutorial-link:hover { text-decoration: underline; }
+        #user-api-key { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1em; }
+        #user-api-key:focus { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2); outline: none; }
         
-        /* --- Modal Styles --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            display: none; justify-content: center; align-items: center;
-            z-index: 1000; animation: fadeInModal 0.3s;
-        }
+        #input-area { display: flex; gap: 10px; align-items: center; background: var(--input-bg); padding: 10px; border-radius: var(--border-radius); border: 1px solid var(--border-color); }
+        #user-input { flex-grow: 1; border: none; background: transparent; padding: 8px; font-size: 1rem; resize: none; max-height: 120px; outline: none; color: var(--text-color); }
+        .control-btn { border: none; color: white; cursor: pointer; font-size: 1rem; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+        .control-btn:hover { transform: scale(1.1); }
+        #send-button { background-color: var(--primary-color); }
+        #send-button:hover { background-color: var(--secondary-color); }
+        #reset-button { background-color: #e74c3c; }
+        #reset-button:hover { background-color: #c0392b; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; animation: fadeInModal 0.3s; }
         @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
-        .modal-content {
-            background: #fff; padding: 30px; border-radius: 12px;
-            max-width: 600px; width: 90%; position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto;
-        }
-        .modal-close {
-            position: absolute; top: 10px; right: 15px;
-            font-size: 1.8rem; color: var(--muted-color);
-            cursor: pointer; transition: transform 0.2s;
-        }
-        .modal-close:hover { transform: scale(1.2); color: var(--text-color); }
+        .modal-content { background: #fff; padding: 30px; border-radius: 12px; max-width: 600px; width: 90%; position: relative; max-height: 80vh; overflow-y: auto; }
+        .modal-close { position: absolute; top: 10px; right: 15px; font-size: 1.8rem; color: var(--text-light); cursor: pointer; transition: transform 0.2s; }
+        .modal-close:hover { transform: scale(1.2); }
         .modal-content h3 { color: var(--primary-color); margin-bottom: 15px; }
         .modal-content p, .modal-content li { margin-bottom: 10px; line-height: 1.6; }
         .modal-content ol { padding-left: 20px; }
@@ -372,30 +246,23 @@
         .modal-content a { color: var(--secondary-color); text-decoration: none; font-weight: 500; }
         .modal-content a:hover { text-decoration: underline; }
 
-        footer {
-            text-align: center;
-            padding: 15px 0;
-            font-size: 14px;
-            color: var(--muted-color);
-        }
+        footer { text-align: center; padding: 15px 0; font-size: 0.9rem; color: var(--text-light); }
+        
         @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            h1 {
-                font-size: 1.5rem;
-            }
-            #chat-container {
-                height: calc(100vh - 280px);
-            }
-            .message {
-                max-width: 85%;
-            }
+            body { padding: 10px; }
+            h1 { font-size: 1.6rem; }
+            #chat-container { height: calc(100vh - 290px); }
+            .message { max-width: 95%; }
+            .bot-message-actions { flex-direction: column; margin: 0; margin-left: 5px; }
+            .action-btn { padding: 4px; }
+            #input-area { padding: 8px; }
+            #user-input { padding: 6px; }
+            .control-btn { width: 40px; height: 40px; }
         }
     </style>
 </head>
 <body>
-    <h1>EngShenChatBotSystem</h1>
+    <h1><i class="fas fa-comments"></i> EngShenChatBotSystem</h1>
     <div class="main-content-wrapper">
         <div id="chat-container"></div>
         <div class="controls-wrapper">
@@ -405,19 +272,14 @@
                 </div>
                 <div class="api-key-label-wrapper">
                     <label for="user-api-key">您的 API 金鑰 (必填)</label>
-                    <div class="api-options">
-                        <a href="#" class="api-tutorial-link">(如何取得？)</a>
-                        <a href="#" id="enableBackupKey" title="無法取得金鑰？點此啟用備用金鑰">
-                            <i class="fas fa-cog"></i>
-                        </a>
-                    </div>
+                    <a href="#" class="api-tutorial-link">(如何取得？)</a>
                 </div>
-                <input type="text" id="user-api-key" placeholder="請貼上您從 Google AI Studio 取得的 API 金鑰">
+                <input type="password" autocomplete="off" id="user-api-key" placeholder="請貼上您從 Google AI Studio 取得的 API 金鑰">
             </div>
             <div id="input-area">
-                <textarea id="user-input" placeholder="輸入你的訊息..."></textarea>
-                <button id="reset-button" title="重設對話"><i class="fa-solid fa-sync-alt"></i></button>
-                <button id="send-button" title="發送訊息"><i class="fa-solid fa-paper-plane"></i></button>
+                <textarea id="user-input" placeholder="輸入你的訊息..." rows="1"></textarea>
+                <button id="reset-button" class="control-btn" title="重設對話"><i class="fa-solid fa-sync-alt"></i></button>
+                <button id="send-button" class="control-btn" title="發送訊息"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
@@ -451,15 +313,12 @@
             userApiKeyInput: document.getElementById('user-api-key'),
             aiApiInfoBox: document.getElementById('aiApiInfoBox'),
             aiApiInfoText: document.getElementById('aiApiInfoText'),
-            enableBackupKey: document.getElementById('enableBackupKey'),
             apiKeyModal: document.getElementById('apiKeyModal'),
             openApiKeyModalLink: document.querySelector('.api-tutorial-link')
         };
         
-        const BACKUP_API_KEY = 'AIzaSyCerlnUOTQ4-5K6VRpugpRI1URcOF6ai2w';
         let conversationHistory = [];
         let isSpeaking = false;
-        let isBackupKeyEnabled = false;
 
         const commonMistakes = {
             "teh": "the", "recieve": "receive", "wierd": "weird",
@@ -473,7 +332,6 @@
 
         const init = () => {
             conversationHistory = [];
-            isBackupKeyEnabled = false;
             ui.chatContainer.innerHTML = '';
             ui.userInput.value = '';
 
@@ -483,7 +341,6 @@
             ui.userApiKeyInput.placeholder = "請貼上您從 Google AI Studio 取得的 API 金鑰";
             ui.aiApiInfoBox.classList.remove('warning');
             ui.aiApiInfoText.textContent = '請提供您的 Google Gemini API 金鑰以開始對話。';
-            ui.enableBackupKey.style.display = 'inline-block';
 
             // Add initial bot message
             const initialMessage = {
@@ -495,6 +352,7 @@
             };
             conversationHistory.push(initialMessage);
             appendMessage('bot', initialMessage.bot.english, initialMessage.bot.chinese);
+            autoAdjustTextareaHeight(ui.userInput);
         };
 
         window.onload = init;
@@ -518,7 +376,6 @@
         });
 
         const getActiveApiKey = () => {
-            if (isBackupKeyEnabled) return BACKUP_API_KEY;
             return ui.userApiKeyInput.value.trim();
         };
 
@@ -528,23 +385,23 @@
 
             const apiKeyToUse = getActiveApiKey();
             if (!apiKeyToUse) {
-                alert('請在輸入框中提供您的 Google Gemini API 金鑰，或點擊齒輪圖示啟用備用金鑰，才能開始對話。');
+                alert('請在輸入框中提供您的 Google Gemini API 金鑰，才能開始對話。');
                 ui.userApiKeyInput.focus();
                 return;
             }
 
             appendMessage('user', message);
             ui.userInput.value = '';
+            autoAdjustTextareaHeight(ui.userInput);
             ui.sendButton.disabled = true;
 
             const typingDiv = appendMessage('bot', '', '', true);
-            typingDiv.classList.add('typing');
 
             let spellingSuggestions = '';
             const words = message.toLowerCase().split(' ');
             words.forEach(word => {
                 if (commonMistakes[word]) {
-                    spellingSuggestions += `[EN] It seems you wrote "${word}" instead of "${commonMistakes[word]}". For example: "I have ${commonMistakes[word]} book." Keep practicing!\n[ZH] 你好像寫了 "${word}" 而不是 "${commonMistakes[word]}"。例如："我有一${commonMistakes[word] === 'a lot' ? '堆' : '本'}書。" 繼續練習吧！\n`;
+                    spellingSuggestions += `[EN] It seems you wrote "${word}" instead of "${commonMistakes[word]}". For example: "I have ${commonMistakes[word] === 'a lot' ? 'a lot of' : 'the'} books." Keep practicing!\n[ZH] 你好像寫了 "${word}" 而不是 "${commonMistakes[word]}"。例如："我有很多書。" 繼續練習吧！\n`;
                 }
             });
 
@@ -611,7 +468,7 @@
                 }
             } catch (error) {
                 ui.chatContainer.removeChild(typingDiv);
-                appendMessage('bot', `抱歉，我無法生成回應：${error.message}`, `抱歉，我無法生成回應：${error.message}`);
+                appendMessage('bot', `Sorry, I couldn't generate a response: ${error.message}`, `抱歉，我無法生成回應：${error.message}`);
                 console.error(error);
             } finally {
                 ui.sendButton.disabled = false;
@@ -639,7 +496,7 @@
                     utterance.onerror = (event) => {
                         if (event.error !== 'interrupted') {
                             console.error('語音播放錯誤:', event.error);
-                            appendMessage('bot', '抱歉，播放音頻時發生錯誤。', '抱歉，播放音頻時發生錯誤。');
+                            appendMessage('bot', 'Sorry, an error occurred during audio playback.', '抱歉，播放音頻時發生錯誤。');
                         }
                         isSpeaking = false;
                         speakBtn.innerHTML = '<i class="fa-solid fa-volume-up"></i>';
@@ -647,7 +504,7 @@
                     window.speechSynthesis.speak(utterance);
                 }
             } else {
-                appendMessage('bot', '抱歉，你的瀏覽器不支援語音播放功能。', '抱歉，你的瀏覽器不支援語音播放功能。');
+                appendMessage('bot', 'Sorry, your browser does not support speech synthesis.', '抱歉，你的瀏覽器不支援語音播放功能。');
             }
         }
 
@@ -655,48 +512,67 @@
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
 
-            if (sender === 'bot' && !isTyping) {
-                const avatar = `<div class="bot-avatar"><div class="robot-head"><div class="robot-eye-left"></div><div class="robot-eye-right"></div><div class="robot-mouth"></div><div class="robot-antenna"></div><div class="robot-antenna-tip"></div></div></div>`;
-                messageDiv.innerHTML = avatar;
+            const messageBubble = document.createElement('div');
+            messageBubble.classList.add('message-bubble');
+
+            if (isTyping) {
+                messageBubble.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+            } else {
+                const contentDiv = document.createElement('div');
+                contentDiv.classList.add('message-content');
+                contentDiv.innerHTML = `<span>${text}</span>`;
+                if (translation) {
+                    contentDiv.innerHTML += `<div class="translation">${translation}</div>`;
+                }
+                messageBubble.appendChild(contentDiv);
             }
 
-            const contentDiv = document.createElement('div');
-            contentDiv.classList.add('message-content');
-            const textSpan = document.createElement('span');
-            textSpan.innerHTML = text;
-            contentDiv.appendChild(textSpan);
-
-            if (sender === 'bot' && translation && !isTyping) {
-                const translationDiv = document.createElement('div');
-                translationDiv.classList.add('translation');
-                translationDiv.innerHTML = translation;
-                contentDiv.appendChild(translationDiv);
+            if (sender === 'bot') {
+                const avatar = document.createElement('div');
+                avatar.classList.add('bot-avatar');
+                avatar.innerHTML = `<div class="robot-head"><div class="robot-eye-left"></div><div class="robot-eye-right"></div><div class="robot-mouth"></div></div><div class="robot-antenna"></div><div class="robot-antenna-tip"></div>`;
+                messageDiv.appendChild(avatar);
             }
-            messageDiv.appendChild(contentDiv);
+            
+            messageDiv.appendChild(messageBubble);
 
             if (text && !isTyping) {
-                const buttonsDiv = document.createElement('div');
-                buttonsDiv.classList.add('message-buttons');
+                const actionsDiv = document.createElement('div');
+                // *** KEY CHANGE START ***
+                // Decide class based on sender for different layouts
+                actionsDiv.classList.add(sender === 'user' ? 'user-message-actions' : 'bot-message-actions');
+                // *** KEY CHANGE END ***
 
-                buttonsDiv.innerHTML = `<button class="copy-btn"><i class="fa-regular fa-copy"></i></button><button class="speak-btn"><i class="fa-solid fa-volume-up"></i></button>`;
-                if (sender === 'bot' && translation) {
-                    buttonsDiv.innerHTML += `<button class="toggle-translation-btn"><i class="fa-solid fa-language"></i></button>`;
-                }
+                actionsDiv.innerHTML = `
+                    <button class="action-btn copy-btn" title="Copy"><i class="fa-regular fa-copy"></i></button>
+                    <button class="action-btn speak-btn" title="Speak"><i class="fa-solid fa-volume-up"></i></button>
+                    ${(sender === 'bot' && translation) ? '<button class="action-btn toggle-translation-btn" title="Translate"><i class="fa-solid fa-language"></i></button>' : ''}
+                `;
                 
-                buttonsDiv.querySelector('.copy-btn').onclick = () => {
+                actionsDiv.querySelector('.copy-btn').onclick = () => {
                     navigator.clipboard.writeText(text);
-                    const btn = buttonsDiv.querySelector('.copy-btn');
+                    const btn = actionsDiv.querySelector('.copy-btn');
                     btn.innerHTML = '<i class="fa-solid fa-check"></i>';
                     setTimeout(() => btn.innerHTML = '<i class="fa-regular fa-copy"></i>', 2000);
                 };
-                buttonsDiv.querySelector('.speak-btn').onclick = () => speakText(text, buttonsDiv.querySelector('.speak-btn'));
+
+                actionsDiv.querySelector('.speak-btn').onclick = () => speakText(text, actionsDiv.querySelector('.speak-btn'));
+                
                 if (sender === 'bot' && translation) {
-                    buttonsDiv.querySelector('.toggle-translation-btn').onclick = () => {
-                        const transDiv = contentDiv.querySelector('.translation');
+                    actionsDiv.querySelector('.toggle-translation-btn').onclick = () => {
+                        const transDiv = messageBubble.querySelector('.translation');
                         transDiv.style.display = transDiv.style.display === 'block' ? 'none' : 'block';
                     };
                 }
-                messageDiv.appendChild(buttonsDiv);
+
+                // *** KEY CHANGE START ***
+                // Append buttons inside the bubble for user, outside for bot
+                if (sender === 'user') {
+                    messageBubble.appendChild(actionsDiv);
+                } else {
+                    messageDiv.appendChild(actionsDiv);
+                }
+                // *** KEY CHANGE END ***
             }
 
             const isNearBottom = ui.chatContainer.scrollHeight - ui.chatContainer.scrollTop - ui.chatContainer.clientHeight < 100;
@@ -707,6 +583,12 @@
             return messageDiv;
         }
 
+        function autoAdjustTextareaHeight(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+        }
+
+        ui.userInput.addEventListener('input', () => autoAdjustTextareaHeight(ui.userInput));
         ui.userInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -714,19 +596,6 @@
             }
         });
         ui.sendButton.addEventListener('click', sendMessage);
-
-        ui.enableBackupKey.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (confirm("這將啟用系統內建的備用金鑰進行對話。\n\n此金鑰為多人共用，尖峰時段可能不穩定或無法使用。\n強烈建議您使用自己的免費金鑰以獲得最佳體驗。\n\n確定要啟用備用金鑰嗎？")) {
-                isBackupKeyEnabled = true;
-                ui.userApiKeyInput.value = '已啟用系統備用金鑰';
-                ui.userApiKeyInput.disabled = true;
-                ui.aiApiInfoBox.classList.add('warning');
-                ui.aiApiInfoText.textContent = '已啟用系統備用金鑰。此金鑰為多人共用，可能不穩定。若要使用自己的金鑰，請點擊右側重設按鈕。';
-                ui.enableBackupKey.style.display = 'none';
-                alert('系統備用金鑰已啟用。');
-            }
-        });
 
     </script>
 </body>
