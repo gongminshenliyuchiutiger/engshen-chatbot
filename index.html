@@ -107,9 +107,9 @@
             background-color: var(--primary-color);
             color: white;
             border-radius: 18px 4px 18px 18px;
-            display: flex; /* MODIFIED FOR BUTTONS INSIDE */
-            align-items: center; /* MODIFIED FOR BUTTONS INSIDE */
-            gap: 10px; /* MODIFIED FOR BUTTONS INSIDE */
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
         }
         
         .bot-message .message-bubble {
@@ -118,7 +118,6 @@
             border-radius: 4px 18px 18px 18px;
         }
 
-        /* --- Original Bot Avatar Styles --- */
         .bot-avatar {
             width: 40px;
             height: 40px;
@@ -189,33 +188,14 @@
         .message-content { flex: 1; }
         .translation { display: none; color: var(--text-light); font-size: 0.9em; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #ccc; }
         
-        /* --- MODIFIED/NEW ACTION BUTTONS STYLES --- */
-        .bot-message-actions {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-left: 10px;
-        }
-        .user-message-actions {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            flex-shrink: 0;
-        }
+        .bot-message-actions { display: flex; align-items: center; gap: 4px; margin-left: 10px; }
+        .user-message-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
         .action-btn { background: none; border: none; color: var(--text-light); cursor: pointer; font-size: 1rem; padding: 6px; border-radius: 50%; transition: all 0.2s; width: 32px; height: 32px; display:inline-flex; align-items:center; justify-content:center;}
         .bot-message + .bot-message-actions .action-btn:hover { background-color: rgba(0,0,0,0.08); color: var(--primary-color); }
         .user-message .action-btn { color: rgba(255,255,255,0.7); }
         .user-message .action-btn:hover { background-color: rgba(255,255,255,0.2); color: #fff; }
 
-        .controls-wrapper {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 0 0 var(--border-radius) var(--border-radius);
-            box-shadow: var(--box-shadow);
-            border: 1px solid var(--border-color);
-            border-top: none;
-        }
-
+        .controls-wrapper { background-color: #fff; padding: 20px; border-radius: 0 0 var(--border-radius) var(--border-radius); box-shadow: var(--box-shadow); border: 1px solid var(--border-color); border-top: none; }
         .api-key-section { margin-bottom: 15px; }
         .info-box { padding: 10px; border-radius: 8px; border-left: 4px solid var(--primary-color); font-size: 0.9em; margin-bottom: 10px; background-color: rgba(39, 174, 96, 0.1); }
         .api-key-label-wrapper { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
@@ -224,7 +204,6 @@
         .api-tutorial-link:hover { text-decoration: underline; }
         #user-api-key { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1em; }
         #user-api-key:focus { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2); outline: none; }
-        
         #input-area { display: flex; gap: 10px; align-items: center; background: var(--input-bg); padding: 10px; border-radius: var(--border-radius); border: 1px solid var(--border-color); }
         #user-input { flex-grow: 1; border: none; background: transparent; padding: 8px; font-size: 1rem; resize: none; max-height: 120px; outline: none; color: var(--text-color); }
         .control-btn { border: none; color: white; cursor: pointer; font-size: 1rem; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
@@ -248,6 +227,35 @@
 
         footer { text-align: center; padding: 15px 0; font-size: 0.9rem; color: var(--text-light); }
         
+        /* --- NEW: Mascot Styles --- */
+        #mascot {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 120px;
+            height: auto;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 999;
+        }
+        #mascot:hover {
+            transform: scale(1.15) rotate(-8deg);
+            animation: mascot-shake 0.5s infinite alternate;
+        }
+        .particle {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1001; /* Above mascot and modal overlay */
+            transition: transform 1s ease-out, opacity 1s ease-out;
+        }
+        @keyframes mascot-shake {
+            0% { transform: scale(1.15) rotate(-8deg); }
+            100% { transform: scale(1.15) rotate(8deg); }
+        }
+
         @media (max-width: 600px) {
             body { padding: 10px; }
             h1 { font-size: 1.6rem; }
@@ -258,6 +266,13 @@
             #input-area { padding: 8px; }
             #user-input { padding: 6px; }
             .control-btn { width: 40px; height: 40px; }
+
+            /* NEW: Mascot on mobile */
+            #mascot {
+                width: 80px;
+                bottom: 15px;
+                left: 15px;
+            }
         }
     </style>
 </head>
@@ -304,6 +319,9 @@
         </div>
     </div>
 
+    <!-- NEW: Mascot Element -->
+    <img id="mascot" src="image/LiyuChillGuy.svg" alt="LiyuChillGuy Mascot">
+
     <script>
         const ui = {
             chatContainer: document.getElementById('chat-container'),
@@ -314,7 +332,8 @@
             aiApiInfoBox: document.getElementById('aiApiInfoBox'),
             aiApiInfoText: document.getElementById('aiApiInfoText'),
             apiKeyModal: document.getElementById('apiKeyModal'),
-            openApiKeyModalLink: document.querySelector('.api-tutorial-link')
+            openApiKeyModalLink: document.querySelector('.api-tutorial-link'),
+            mascot: document.getElementById('mascot') // NEW: Add mascot to UI object
         };
         
         let conversationHistory = [];
@@ -375,6 +394,7 @@
             }
         });
 
+        // --- Existing Chat Logic (no changes needed) ---
         const getActiveApiKey = () => {
             return ui.userApiKeyInput.value.trim();
         };
@@ -538,10 +558,7 @@
 
             if (text && !isTyping) {
                 const actionsDiv = document.createElement('div');
-                // *** KEY CHANGE START ***
-                // Decide class based on sender for different layouts
                 actionsDiv.classList.add(sender === 'user' ? 'user-message-actions' : 'bot-message-actions');
-                // *** KEY CHANGE END ***
 
                 actionsDiv.innerHTML = `
                     <button class="action-btn copy-btn" title="Copy"><i class="fa-regular fa-copy"></i></button>
@@ -565,14 +582,11 @@
                     };
                 }
 
-                // *** KEY CHANGE START ***
-                // Append buttons inside the bubble for user, outside for bot
                 if (sender === 'user') {
                     messageBubble.appendChild(actionsDiv);
                 } else {
                     messageDiv.appendChild(actionsDiv);
                 }
-                // *** KEY CHANGE END ***
             }
 
             const isNearBottom = ui.chatContainer.scrollHeight - ui.chatContainer.scrollTop - ui.chatContainer.clientHeight < 100;
@@ -596,6 +610,47 @@
             }
         });
         ui.sendButton.addEventListener('click', sendMessage);
+
+        // --- NEW: Mascot Interaction Logic ---
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            document.body.appendChild(particle);
+
+            // Randomize particle properties
+            const size = Math.floor(Math.random() * 10 + 5);
+            // Colors matching the "Green Edition" theme
+            const colors = ['#27ae60', '#2ecc71', '#f1c40f', '#e74c3c', '#3498db'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.background = color;
+            particle.style.left = `${x - size / 2}px`;
+            particle.style.top = `${y - size / 2}px`;
+
+            const destinationX = (Math.random() - 0.5) * 300;
+            const destinationY = (Math.random() - 0.5) * 300;
+            const rotation = Math.random() * 520;
+            
+            // Animate the particle
+            requestAnimationFrame(() => {
+                particle.style.transform = `translate(${destinationX}px, ${destinationY}px) rotate(${rotation}deg)`;
+                particle.style.opacity = '0';
+            });
+            
+            // Remove particle after animation
+            setTimeout(() => {
+                particle.remove();
+            }, 1000); // 1000ms is transition duration
+        }
+
+        ui.mascot.addEventListener('click', (e) => {
+            // Create a burst of particles on click
+            for (let i = 0; i < 30; i++) {
+                createParticle(e.clientX, e.clientY);
+            }
+        });
 
     </script>
 </body>
